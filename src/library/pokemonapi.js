@@ -1,46 +1,79 @@
-async function fetchPokemon() {
 
+export async function fetchPokemonInformation(id) {
 	try {
-		let pokemonArray = []
-		const response = await fetch(`https://pokeapi.co/api/v2/pokemon/1`)
-		const fetchedData = await response.json();
-		console.log(fetchedData.sprites.front_default)
-		// fetchedData.results.map((item) => {
-		// 	item.name !== undefined &&
-		// 		pokemonArray.push(item);
-		// })
-		// if (pokemonArray.length > 0) {
-		// 	console.log(pokemonArray)
-		// 	return pokemonArray
-		// }
-		// else {
-		// 	return ([])
-		// }
+		const response = await fetch('https://beta.pokeapi.co/graphql/v1beta', {
+			method: 'POST',
+
+			headers: {
+				"Content-Type": "application/json"
+			},
+
+			body: JSON.stringify({
+				query:
+					`
+
+				{
+				  pokemon_v2_pokemon(where: {pokemon_species_id: {_eq: ${id}}}) {
+					id
+					name
+					pokemon_v2_pokemonsprites {
+					  id
+					  sprites(path: "other.official-artwork")
+					}
+					pokemon_v2_pokemontypes {
+					  id
+					  pokemon_v2_type {
+						name
+					  }
+					}
+				  }
+				  pokemon_v2_pokemonspeciesflavortext(where: {pokemon_species_id: {_eq: ${id}}, language_id: {_eq: 9}, version_id: {_eq: 10}}) {
+					flavor_text
+				  }
+				}
+
+				`
+			})
+		})
+		const data = await response.json()
+		console.log(data.data.pokemon_v2_pokemon[0].pokemon_v2_pokemonsprites)
+		return data.data.pokemon_v2_pokemon[0]
 	} catch (error) { console.log(error) }
 }
+
+
+
+
 export async function fetchPokemonSprites() {
-	const response = await fetch('https://beta.pokeapi.co/graphql/v1beta', {
-		method: 'POST',
+	try {
+		const response = await fetch('https://beta.pokeapi.co/graphql/v1beta', {
+			method: 'POST',
 
-		headers: {
-			"Content-Type": "application/json"
-		},
+			headers: {
+				"Content-Type": "application/json"
+			},
 
-		body: JSON.stringify({
+			body: JSON.stringify({
+				query:
+					`
 
-			query: `{
-	  pokemon_v2_pokemonsprites {
-		pokemon_v2_pokemon {
-		  name
-		  pokemon_v2_pokemonsprites(distinct_on: id) {
-			sprites(path: "front_default")
-		  }
-		}
-	  }
-	}`
-		})
-	})
-	const data = await response.json()
-	console.log(data.data.pokemon_v2_pokemonsprites[0].pokemon_v2_pokemon.pokemon_v2_pokemonsprites[0].sprites)
+{
+  pokemon_v2_pokemon {
+    name
+    id
+    pokemon_v2_pokemonsprites {
+      id
+      sprites(path: "other.home.front_default")
+    }
+  }
 }
-fetchPokemonSprites()
+
+				`
+			})
+		})
+		const data = await response.json()
+		console.log(data.data.pokemon_v2_pokemon)
+		// return [{},{},{}]
+	} catch (error) { console.log(error) }
+}
+fetchPokemonInformation(1)
