@@ -16,3 +16,33 @@ export async function fetchPokemon() {
 		}
 	} catch (error) { console.log(error) }
 }
+
+
+
+export async function fetchPokemonSprites() {
+	try{
+	const response = await fetch('https://beta.pokeapi.co/graphql/v1beta', {
+		method: 'POST',
+
+		headers: {
+			"Content-Type": "application/json"
+		},
+
+		body: JSON.stringify({
+
+			query: `{
+	  pokemon_v2_pokemonsprites {
+		pokemon_v2_pokemon {
+		  name
+		  pokemon_v2_pokemonsprites(distinct_on: id) {
+			sprites(path: "front_default")
+		  }
+		}
+	  }
+	}`
+		})
+	})
+	const data = await response.json()
+	return data.data.pokemon_v2_pokemonsprites
+	} catch (error){console.log(error)}
+}

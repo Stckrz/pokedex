@@ -18,36 +18,29 @@ async function fetchPokemon() {
 		// }
 	} catch (error) { console.log(error) }
 }
-async function fetchPokemonSprites() {
-const response = await fetch('https://beta.pokeapi.co/graphql/v1beta', {
-  method: 'POST',
+export async function fetchPokemonSprites() {
+	const response = await fetch('https://beta.pokeapi.co/graphql/v1beta', {
+		method: 'POST',
 
-  headers: {
-    "Content-Type": "application/json"
-  },
+		headers: {
+			"Content-Type": "application/json"
+		},
 
-  body: JSON.stringify({
+		body: JSON.stringify({
 
 			query: `{
-  pokemon_v2_pokemonsprites {
-    pokemon_v2_pokemon {
-      name
-      pokemon_v2_pokemonsprites(distinct_on: id) {
-        sprites(path: "front_default")
-      }
-    }
-  }
-}`
-    // query: `{
-    //   characters {
-    //     results {
-    //       name
-    //     }
-    //   }
-    // }`
-  })
-})
+	  pokemon_v2_pokemonsprites {
+		pokemon_v2_pokemon {
+		  name
+		  pokemon_v2_pokemonsprites(distinct_on: id) {
+			sprites(path: "front_default")
+		  }
+		}
+	  }
+	}`
+		})
+	})
 	const data = await response.json()
-	console.log(data.data.pokemon_v2_pokemonsprites[0])
+	console.log(data.data.pokemon_v2_pokemonsprites[0].pokemon_v2_pokemon.pokemon_v2_pokemonsprites[0].sprites)
 }
 fetchPokemonSprites()

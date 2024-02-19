@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { fetchPokemon } from '@library/fetch.tsx';
+import { fetchPokemonSprites } from '@library/fetch.tsx';
 
 export const PokemonSearch: React.FC = () => {
 	const [pokemonList, setPokemonList] = useState([]);
 	const [inputText, setInputText] = useState("");
 
 	async function getPokemon() {
-		setPokemonList(await fetchPokemon());
+		setPokemonList(await fetchPokemonSprites());
 	}
 
 	function inputChangeHandler(e: React.ChangeEvent<HTMLInputElement>){
@@ -20,15 +20,17 @@ export const PokemonSearch: React.FC = () => {
 	return (
 		<>
 			<div>
-				<input onChange={(e) => {inputChangeHandler(e)}} />
+				<input className="bg-black" onChange={(e) => {inputChangeHandler(e)}} />
 			</div>
 			<div>
 				<div>
 					{
-						pokemonList.map((item) => {
+						pokemonList.map((item: any) => {
 							return (
-								item.name.includes(inputText) &&
-								<div>{item.name}</div>
+							/* <div>{item.pokemon_v2_pokemon.name}</div> */
+								item.pokemon_v2_pokemon.name.includes(inputText) &&
+									<img src={item.pokemon_v2_pokemon.pokemon_v2_pokemonsprites.} />
+								<div className="bg-black">{item.pokemon_v2_pokemon.name}</div>
 							)
 						})
 					}
