@@ -25,9 +25,11 @@ export const PokemonView: React.FC<PokemonViewProps> = ({ id, setActivePokemon }
 				<div className="flex" onClick={() => { setActivePokemon("") }}>
 
 					<img src={pokemonInformation.spriteurl} />
-					<div className="flex flex-col">
+					<div className="flex flex-col space-y-52">
 						<div>
+							<h1>
 							{pokemonInformation.name}
+							</h1>
 						</div>
 						<div>{
 							pokemonInformation.types.map((type) => {
